@@ -11,7 +11,7 @@ async def send_message(ws, user):
 async def receive_message(ws):
     async for msg in ws:
         msg_json = msg.json()
-        print(f">>>{msg_json['user']}: {msg_json['message']})")
+        print(f">>> [{msg_json['user']}] : {msg_json['message']})")
 
 async def main(user):
     async with aiohttp.ClientSession() as session:
