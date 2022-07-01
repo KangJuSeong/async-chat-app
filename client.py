@@ -10,10 +10,11 @@ async def send_message(ws, user):
 
 async def receive_message(ws):
     async for msg in ws:
-        msg_json = msg.json()
-        print(f">>>{msg_json['user']}: {msg_json['message']})")
-
-async def main(user):
+        if msg.type == aiphttp.web.WSMsgType.text: 
+            msg_json = msg.json()
+            print(f">>> [{msg_json['user']}] : {msg_json['message']})")
+    
+async def handler(user):
     async with aiohttp.ClientSession() as session:
         async with session.ws_connect('http://localhost:8080/ws') as ws:
             await ws.send_str(user)
@@ -26,4 +27,4 @@ async def main(user):
             )
 
 user = input('Input name : ')
-asyncio.run(main(user))
+asyncio.run(handler(user))

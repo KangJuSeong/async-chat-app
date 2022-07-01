@@ -12,16 +12,23 @@ async def websocket_handler(request):
 
     room = 'test_room'
     user = await ws.receive_str()
-    print(f'{user} connection success')
-    await ws.send_str(f'{user}! Welcome chat app.')
+    print(f'[{user}] connection success')
+    await ws.send_str(f'[{user}] Welcome chat app.')
     
-    request.app['websockets'][room][user] = ws
+    if request.app['websockets'][room].get(user):
+        await ws.close(message=b'Aready User')
+        return ws
+    else:
+        request.app['websockets'][room][user] = ws
+        for ws in request.app['websockets'][room].values():
+            await broadcast(request.app, message={'user': 'SYSTEM', 'message': f'[{user}] enter chat room'})
 
     async for msg in ws:
-        message = msg.json() 
-        await broadcast(request.app, message)        
-
-    print(f'{user} connection closed')
+        if msg.type == web.WSMsgType.text:
+            message = msg.json() 
+            await broadcast(request.app, message)        
+    
+    print(f'[{user}] connection closed')
 
     return ws
     
