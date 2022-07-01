@@ -24,9 +24,10 @@ async def websocket_handler(request):
             await broadcast(request.app, message={'user': 'SYSTEM', 'message': f'[{user}] enter chat room'})
 
     async for msg in ws:
-        message = msg.json() 
-        await broadcast(request.app, message)        
-
+        if msg.type == web.WSMsgType.text:
+            message = msg.json() 
+            await broadcast(request.app, message)        
+    
     print(f'[{user}] connection closed')
 
     return ws
