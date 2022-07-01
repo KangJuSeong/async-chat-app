@@ -22,4 +22,5 @@ async def websocket_handler(request):
 
 app = web.Application()
 app.add_routes([web.get('/ws', websocket_handler)])
+web.run_app(app)
 
