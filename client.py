@@ -1,6 +1,7 @@
 from aioconsole import ainput
 import aiohttp   
 import asyncio
+from aiohttp import web
 
 
 async def send_message(ws, user):
@@ -10,7 +11,7 @@ async def send_message(ws, user):
 
 async def receive_message(ws):
     async for msg in ws:
-        if msg.type == aiphttp.web.WSMsgType.text: 
+        if msg.type == web.WSMsgType.text: 
             msg_json = msg.json()
             print(f">>> [{msg_json['user']}] : {msg_json['message']})")
     
