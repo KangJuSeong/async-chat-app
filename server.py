@@ -34,8 +34,7 @@ async def websocket_handler(request):
         return ws
     else:
         request.app['websockets'][room][user] = ws
-        for ws in request.app['websockets'][room].values():
-            await broadcast(request.app, message={'user': 'SYSTEM', 'message': f'[{user}] enter chat room'})
+        await broadcast(request.app, message={'user': 'SYSTEM', 'message': f'[{user}] enter chat room'})
 
     async for msg in ws:
         if msg.type == web.WSMsgType.text:
