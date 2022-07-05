@@ -1,10 +1,23 @@
 from aiohttp import web
-import aiohttp
 import asyncio
-import random
 from collections import defaultdict
 
 
+routes = web.RouteTableDef()
+
+def html_response(path, data=None):
+    f = open(path)
+    return web.Response(text=f.read(), content_type='text/html')
+
+@routes.get('/')
+async def index(request):
+    return html_response('./templates/index.html')
+
+@routes.get('/room')
+async def room(request):
+    return html_response('./templates/room.html')
+
+@routes.get('/ws')
 async def websocket_handler(request):
 
     ws = web.WebSocketResponse()
@@ -13,6 +26,7 @@ async def websocket_handler(request):
     room = 'test_room'
     user = await ws.receive_str()
     print(f'[{user}] connection success')
+    
     await ws.send_str(f'[{user}] Welcome chat app.')
     
     if request.app['websockets'][room].get(user):
@@ -38,7 +52,7 @@ async def broadcast(app, message):
         await ws.send_json(message)
 
 app = web.Application()
-app.add_routes([web.get('/ws', websocket_handler)])
+app.add_routes(routes)
 app['websockets'] = defaultdict(dict)
 web.run_app(app)
 
