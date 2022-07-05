@@ -6,7 +6,7 @@
     <title>Chat Room</title>
 </head>
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <textarea id="chat-log" style="overflow-y:scroll" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     <script>
@@ -23,7 +23,10 @@
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += 
 						('['+data.user+'] : '+data.message+'\n');
-        };
+			const top = document.getElementById('chat-log').scrollHeight;
+  			document.getElementById('chat-log').scrollTop = top;
+
+		};
 
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
