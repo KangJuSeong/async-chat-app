@@ -10,3 +10,4 @@
 
 3. Build a self-contained Docker image that runs your webchat app
   - docker-compose would be helpful to run Redis together with your app
+.
