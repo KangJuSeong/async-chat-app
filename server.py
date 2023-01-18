@@ -42,7 +42,7 @@ async def websocket_handler(request):
             await broadcast(request.app, message)        
     
     print(f'[{user}] connection closed')
-
+    del request.app['websockets'][room][user]
     return ws
     
 
