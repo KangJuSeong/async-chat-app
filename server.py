@@ -50,8 +50,9 @@ async def broadcast(app, message):
     for user, ws in app['websockets']['test_room'].items():
         await ws.send_json(message)
 
-app = web.Application()
-app.add_routes(routes)
-app['websockets'] = defaultdict(dict)
-web.run_app(app)
+async def web_server():
+    app = web.Application()
+    app.add_routes(routes)
+    app['websockets'] = defaultdict(dict)
+    return app
 
